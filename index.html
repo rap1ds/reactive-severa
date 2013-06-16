@@ -13,7 +13,7 @@
       }
 
       .form-signin {
-        max-width: 300px;
+        max-width: 500px;
         padding: 19px 29px 29px;
         margin: 0 auto;
         background-color: #fff;
@@ -37,7 +37,23 @@
         padding: 7px 9px;
       }
       .small-input {
-        width: 1.5em;
+        width: 1.8em;
+      }
+
+      #unmarked-span {
+        width: 7em;
+      }
+
+      .medium-input {
+        width: 15em;
+      }
+
+      #unmarked, .severa-time {
+        margin-left: 1em;
+        font-size: 200%;
+      }
+      .negative {
+        color: red;
       }
 
     </style>
@@ -49,18 +65,18 @@
       <form class="form-signin">
         <h2 class="form-signin-heading">Severa calculator</h2>
         
-        <label>When did you <strong>came?</strong></label>
+        <label>When did you <strong>arrive?</strong></label>
         
         <div class="controls">
-          <input id="start-hours" type="text" class="small-input" placeholder="8">
-          <input id="start-minutes" type="text" class="small-input" placeholder="00">
+          <input id="start-hours" type="text" class="small-input" placeholder="hh">
+          <input id="start-minutes" type="text" class="small-input" placeholder="mm">
         </div>
 
         <label>When did you <strong>leave?</strong></label>
         
         <div class="controls">
-          <input id="end-hours" type="text" class="small-input">
-          <input id="end-minutes" type="text" class="small-input">
+          <input id="end-hours" type="text" class="small-input" placeholder="hh">
+          <input id="end-minutes" type="text" class="small-input" placeholder="mm">
         </div>
 
         <hr />
@@ -68,35 +84,48 @@
         <label>How long was your <strong>lunch?</strong></label>
         
         <div class="controls">
-          <input type="text" class="small-input">
-          <input type="text" class="small-input">
+          <input id="lunch-hours" type="text" class="small-input" placeholder="hh">
+          <input id="lunch-minutes" type="text" class="small-input" placeholder="mm">
         </div>
 
-        <label>Task 1</label>
+        <label>Other tasks</label>
 
         <div class="controls">
-          <input type="text" class="small-input">
-          <input type="text" class="small-input">
-        </div>
-
-        <label>Task 2</label>
-
-        <div class="controls">
-          <input type="text" class="small-input">
-          <input type="text" class="small-input">
-        </div>
-
-        <label>Task 3</label>
-
-        <div class="controls">
-          <input type="text" class="small-input">
-          <input type="text" class="small-input">
+          <input id="task1-desc" type="text" class="medium-input" placeholder="Description">
+          <input id="task1-hours" type="text" class="small-input" placeholder="hh">
+          <input id="task1-minutes" type="text" class="small-input" placeholder="mm">
+          <span id="severa-time1" class="severa-time"></span>
         </div>
 
         <div class="controls">
-          <span>Unmarked hours: <strong id="unmarked">6:15</strong></span>
+          <input id="task2-desc" type="text" class="medium-input" placeholder="Description">
+          <input id="task2-hours" type="text" class="small-input" placeholder="hh">
+          <input id="task2-minutes" type="text" class="small-input" placeholder="mm">
+          <span id="severa-time2" class="severa-time"></span>
         </div>
+
+        <div class="controls">
+          <input id="task3-desc" type="text" class="medium-input" placeholder="Description">
+          <input id="task3-hours" type="text" class="small-input" placeholder="hh">
+          <input id="task3-minutes" type="text" class="small-input" placeholder="mm">
+          <span id="severa-time3" class="severa-time"></span>
+        </div>
+
+        <div class="controls">
+          <input id="task3-desc" type="text" class="medium-input" placeholder="Description">
+          <span id="unmarked-span"><strong id="unmarked">0:00</strong></span>
+          <span id="severa-time-unmarked" class="severa-time"></span>
+        </div>
+
+        <div class="controls">
+          <label class="checkbox">
+            <input id="round" type="checkbox" checked="checked"> Round to nearest 15 mins
+          </label>
+        </div>
+
       </form>
+
+      <a href="javascript:(function(){document.head.appendChild(document.createElement('script')).src='http://localhost:8888/optimized.js';})();">Bookmarklet</a>
 
     </div> <!-- /container -->
 

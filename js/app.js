@@ -2,10 +2,9 @@ requirejs.config({
     "baseUrl": "js",
     "paths": {
       "jquery": "../components/jquery/jquery",
-      "Bacon": "../components/baconjs/dist/Bacon"
-    },
-    "shim": {
-      "Bacon": ["jquery"]
+      "Bacon": "../components/baconjs/dist/Bacon",
+      "lodash": "../components/lodash/lodash",
+      "html": "../html"
     }
 });
 
