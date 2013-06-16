@@ -1,19 +1,24 @@
-define(["jquery", "Bacon", "timeutils", "text!html/index.html"], function($, Bacon, time, tmpl) {
+define(["jquery", "Bacon", "timeutils", "text!html/index.html", "text!css/styles.css"], function($, Bacon, time, tmpl, css) {
   $(function() {
     var main = window.frames["main"].document;
     var mainContents = $(main).contents();
     var frame = window.frames["lista"].document;
     var frameContents = $(frame).contents();
 
-    function loadCss(url) {
-      var link = document.createElement("link");
-      link.type = "text/css";
-      link.rel = "stylesheet";
-      link.href = url;
-      frame.getElementsByTagName("head")[0].appendChild(link);
+    function loadCss(css) {
+      var head = frame.getElementsByTagName('head')[0],
+          style = document.createElement('style');
+
+      style.type = 'text/css';
+      if (style.styleSheet){
+        style.styleSheet.cssText = css;
+      } else {
+        style.appendChild(document.createTextNode(css));
+      }
+      head.appendChild(style);
     }
 
-    loadCss("http://localhost:8888/css/styles.css");
+    loadCss(css);
 
     var newDiv = $("<div>I'm a new div</div>");
     var body = $(body).get(0);

@@ -17973,22 +17973,29 @@ define('text',['module'], function (module) {
 });
 define('text!html/index.html',[],function () { return '<div id="calculator-container">\n  <form class="form-signin">\n    <h2 class="form-signin-heading">Severa calculator</h2>\n    \n    <label>Pick a day <strong>day</strong></label>\n\n    <div class="controls">\n      <select id="pickaday">\n  \t\t<option value="0">Monday</option> \n  \t\t<option value="1">Tuesday</option>\n  \t\t<option value="2">Wednesday</option>\n  \t\t<option value="3">Thuesday</option>\n  \t\t<option value="4">Friday</option>\n  \t\t<option value="5">Saturday</option>\n  \t\t<option value="6">Sunday</option>\n\t  </select>\n    </div>\n\n    <label>When did you <strong>come?</strong></label>\n    \n    <div class="controls">\n      <input id="start-hours" type="text" class="small-input" placeholder="hh">\n      <input id="start-minutes" type="text" class="small-input" placeholder="mm">\n    </div>\n\n    <label>When did you <strong>leave?</strong></label>\n    \n    <div class="controls">\n      <input id="end-hours" type="text" class="small-input" placeholder="hh">\n      <input id="end-minutes" type="text" class="small-input" placeholder="mm">\n    </div>\n\n    <hr />\n\n    <label>How long was your <strong>lunch?</strong></label>\n    \n    <div class="controls">\n      <input id="lunch-hours" type="text" class="small-input" placeholder="hh">\n      <input id="lunch-minutes" type="text" class="small-input" placeholder="mm">\n    </div>\n\n    <label>Other tasks</label>\n\n    <div class="controls">\n      <input id="task1-desc" type="text" class="medium-input" placeholder="Description">\n      <input id="task1-hours" type="text" class="small-input" placeholder="hh">\n      <input id="task1-minutes" type="text" class="small-input" placeholder="mm">\n      <span id="severa-time1" class="severa-time"></span>\n    </div>\n\n    <div class="controls">\n      <input id="task2-desc" type="text" class="medium-input" placeholder="Description">\n      <input id="task2-hours" type="text" class="small-input" placeholder="hh">\n      <input id="task2-minutes" type="text" class="small-input" placeholder="mm">\n      <span id="severa-time2" class="severa-time"></span>\n    </div>\n\n    <div class="controls">\n      <input id="task3-desc" type="text" class="medium-input" placeholder="Description">\n      <input id="task3-hours" type="text" class="small-input" placeholder="hh">\n      <input id="task3-minutes" type="text" class="small-input" placeholder="mm">\n      <span id="severa-time3" class="severa-time"></span>\n    </div>\n\n    <div class="controls">\n      <input id="task4-desc" type="text" class="medium-input" placeholder="Description">\n      <span id="unmarked-span"><strong id="unmarked">0:00</strong></span>\n      <span id="severa-time-unmarked" class="severa-time"></span>\n    </div>\n\n    <div class="controls">\n      <label class="checkbox">\n        <input id="round" type="checkbox" checked="checked"> Round to nearest 15 mins\n      </label>\n    </div>\n\n  </form>\n</div>';});
 
-define('main',["jquery", "Bacon", "timeutils", "text!html/index.html"], function($, Bacon, time, tmpl) {
+define('text!css/styles.css',[],function () { return '#calculator-container {\n\tposition: absolute;\n\ttop: 10px;\n\tbottom: 10px;\n\tright: 10px;\n\tleft: 10px;\n\tpadding: 10px;\n\tbackground-color: white;\n\tborder: 2px solid #CCC;\n\tmax-width: 900px;\n}';});
+
+define('main',["jquery", "Bacon", "timeutils", "text!html/index.html", "text!css/styles.css"], function($, Bacon, time, tmpl, css) {
   $(function() {
     var main = window.frames["main"].document;
     var mainContents = $(main).contents();
     var frame = window.frames["lista"].document;
     var frameContents = $(frame).contents();
 
-    function loadCss(url) {
-      var link = document.createElement("link");
-      link.type = "text/css";
-      link.rel = "stylesheet";
-      link.href = url;
-      frame.getElementsByTagName("head")[0].appendChild(link);
+    function loadCss(css) {
+      var head = frame.getElementsByTagName('head')[0],
+          style = document.createElement('style');
+
+      style.type = 'text/css';
+      if (style.styleSheet){
+        style.styleSheet.cssText = css;
+      } else {
+        style.appendChild(document.createTextNode(css));
+      }
+      head.appendChild(style);
     }
 
-    loadCss("http://localhost:8888/css/styles.css");
+    loadCss(css);
 
     var newDiv = $("<div>I'm a new div</div>");
     var body = $(body).get(0);
