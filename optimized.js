@@ -18168,11 +18168,23 @@ define('main',["jquery", "Bacon", "timeutils", "text!html/index.html", "text!css
       }
 
       $("#severa-time1", bottomFrameContents).html(severaTimes[1]);
-      $(createSelector(day, 0), mainFrameContents).val(severaTimes[1]);
+      if(severaTimes[1] !== "0,0") {
+        $(createSelector(day, 0), mainFrameContents).val(severaTimes[1]);
+      } else {
+         $(createSelector(day, 0), mainFrameContents).val("");
+      }
       $("#severa-time2", bottomFrameContents).html(severaTimes[2]);
-      $(createSelector(day, 1), mainFrameContents).val(severaTimes[2]);
+      if(severaTimes[2] !== "0,0") {
+        $(createSelector(day, 1), mainFrameContents).val(severaTimes[2]);
+      } else {
+         $(createSelector(day, 1), mainFrameContents).val("");
+      }
       $("#severa-time3", bottomFrameContents).html(severaTimes[3]);
-      $(createSelector(day, 2), mainFrameContents).val(severaTimes[3]);
+      if(severaTimes[3] !== "0,0") {
+        $(createSelector(day, 2), mainFrameContents).val(severaTimes[3]);
+      } else {
+         $(createSelector(day, 2), mainFrameContents).val("");
+      }
       $("#severa-time-unmarked", bottomFrameContents).html(time.toSeveraTime(restTime));
       $(createSelector(day, 3), mainFrameContents).val(time.toSeveraTime(restTime));
 
@@ -18183,7 +18195,7 @@ define('main',["jquery", "Bacon", "timeutils", "text!html/index.html", "text!css
       severaTimes[4] = time.toSeveraTime(restTime);
 
       _.range(0, 4).forEach(function(i) {
-        if(severaTimes[i + 1] !== "0,0") {
+        if(severaTimes[i + 1] !== "") {
           if(!pairsValues[i]) {
             save.attr('disabled','disabled');
           } else {
