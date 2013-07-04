@@ -17294,11 +17294,20 @@ define('page',["jquery"], function($) {
     return $(selector, bottomFrameContents);
   }
 
+  function $project(i) {
+    return $mainFrame("#addProj_ID" + i);
+  }
+
+  function $grid(row, column) {
+    return $mainFrame(["#txt", "Paiva", row, column].join("_"));
+  }
+
   return {
-    mainFrameContents: mainFrameContents,
-    bottomFrameContents: bottomFrameContents,
     $mainFrame: $mainFrame,
-    $bottomFrame: $bottomFrame
+    $bottomFrame: $bottomFrame,
+    $saveButton: $mainFrame("input[class='button']"),
+    $project: $project,
+    $grid: $grid
   };
 });
 /**
@@ -17708,41 +17717,97 @@ define('ui',[
     loadHtml: loadHtml
   }
 });
+define('decorations',[
+  "jquery", 
+  "Bacon", 
+  "page"], 
+  function($, Bacon, page) {
+  
+  function toNumStream(el) {
+    var initialVal = Number(el.val());
+    var prop = el.asEventStream("change")
+      .map(function(event) {
+        return Number($(event.target).val());
+      })
+      .toProperty(initialVal);
+
+    return prop;
+  }
+
+  function nonZeroPositiveNumber(num) {
+    return _.isNumber(num) && num > 0;
+  }
+
+  function disableSendIfNoProjectSelected() {
+    
+    var projectDropdowns = _.range(0, 4).map(function(i) { 
+      return page.$project(i);
+    });
+
+    var projectProperties = projectDropdowns.map(function(el) {
+      debugger;
+      var numStreams = toNumStream(el).map(function(num) {
+        debugger;
+        return !_.isNaN(num);
+      });
+
+      numStreams.log("project prop");
+
+      return numStreams;
+    });
+
+    var inputRows = _.range(0, 4).map(function(row) {
+      return _.range(0, 7).map(function(column) {
+        return page.$grid(row, column);
+      });
+    });
+
+    var inputRowStreams = inputRows.map(function(inputColumns) {
+      return inputColumns.map(function(el) {
+        return toNumStream(el).map(nonZeroPositiveNumber);
+      }).reduce(function(a, b) {
+        return a.or(b);
+      });
+    });
+
+    var rows = _.range(0, 4).map(function(i) {
+      return Bacon.combineWith(function(project, columns) {
+        if(columns) {
+          return project;
+        } else {
+          return true;
+        }
+      }, projectProperties[i], inputRowStreams[i]).log("rows " + i);
+    }).reduce(function(a, b) {
+      return a.and(b);
+    });
+
+    rows.onValue(function(isAllSelected) {
+      if(isAllSelected) {
+        page.$saveButton.removeAttr('disabled');
+      } else {
+        page.$saveButton.attr('disabled','disabled');
+      }
+    });
+  };
+
+  return {
+    disableSendIfNoProjectSelected: disableSendIfNoProjectSelected
+  };
+});
 define('main',[
   "jquery", 
   "Bacon",
   "pat",
   "timeutils",
   "ui",
-  "page"
-  ], function($, Bacon, pat, time, ui, page) {
+  "page",
+  "decorations"
+  ], function($, Bacon, pat, time, ui, page, decorations) {
 
   function dayOfWeek() {
     var day = new Date().getDay();
     return day === 0 ? 6 : day - 1;
-  }
-
-  function disableSendIfNoProjects() {
-    var props = _.range(0, 4)
-      .map(function(i) {
-        var project = page.$mainFrame("#addProj_ID" + i);
-        var task = page.$mainFrame("#addTask_ID" + i);
-        
-        return [project].map(function(el) {
-          var currentVal = el.val();
-          var currentValBool = !_.isNaN(Number(currentVal));
-          return el.asEventStream("change")
-            .map(function(event) {
-              return !_.isNaN(Number($(event.target).val()));
-            })
-            .toProperty(currentValBool);
-        });
-      })
-      .map(function(pair) {
-        return pair[0];
-      });
-
-    return props;
   }
 
   $(function() {
@@ -17752,6 +17817,8 @@ define('main',[
 
     ui.loadCss();
     ui.loadHtml({endHours: defaultEndHours, endMinutes: defaultEndMinutes});
+
+    decorations.disableSendIfNoProjectSelected();
 
     function toNumStream(selector) {
       return page.$bottomFrame(selector)
@@ -17849,12 +17916,9 @@ define('main',[
 
     var day = toNumProperty("#pickaday", defaultDay).map(lastValue);
 
-    var pairs = disableSendIfNoProjects();
-
-    Bacon.combineAsArray(roundedTotal, day, Bacon.combineAsArray(pairs)).onValue(pat()
-      .caseof(_.isArray, function(args, self) { debugger; self.apply(this, args) })
-      .otherwise(function(times, dayValue, pairsValues) {
-        debugger;
+    Bacon.combineAsArray(roundedTotal, day).onValue(pat()
+      .caseof(_.isArray, function(args, self) { self.apply(this, args); })
+      .otherwise(function(times, dayValue) {
         var restTime = times.reduce(function(a, b) {
           return a - b;
         });
@@ -17894,25 +17958,9 @@ define('main',[
         } else {
           page.$mainFrame(createSelector(day, 2)).val("");
         }
-        
+
         page.$bottomFrame("#severa-time-unmarked").html(time.toSeveraTime(restTime));
         page.$mainFrame(createSelector(day, 3)).val(time.toSeveraTime(restTime));
-
-        var save = page.$mainFrame("input[class='button']");
-        save.removeAttr('disabled');
-
-        // UGLY, FIX, NOW!
-        severaTimes[4] = time.toSeveraTime(restTime);
-
-        _.range(0, 4).forEach(function(i) {
-          if(severaTimes[i + 1] !== "0,0") {
-            if(!pairsValues[i]) {
-              save.attr('disabled','disabled');
-            } else {
-              save.removeAttr('disabled');
-            }
-          }
-        });
       })
     );
   });

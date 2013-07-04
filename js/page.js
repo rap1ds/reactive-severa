@@ -10,10 +10,19 @@ define(["jquery"], function($) {
     return $(selector, bottomFrameContents);
   }
 
+  function $project(i) {
+    return $mainFrame("#addProj_ID" + i);
+  }
+
+  function $grid(row, column) {
+    return $mainFrame(["#txt", "Paiva", row, column].join("_"));
+  }
+
   return {
-    mainFrameContents: mainFrameContents,
-    bottomFrameContents: bottomFrameContents,
     $mainFrame: $mainFrame,
-    $bottomFrame: $bottomFrame
+    $bottomFrame: $bottomFrame,
+    $saveButton: $mainFrame("input[class='button']"),
+    $project: $project,
+    $grid: $grid
   };
 })

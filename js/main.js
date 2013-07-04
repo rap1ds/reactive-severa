@@ -4,35 +4,13 @@ define([
   "pat",
   "timeutils",
   "ui",
-  "page"
-  ], function($, Bacon, pat, time, ui, page) {
+  "page",
+  "decorations"
+  ], function($, Bacon, pat, time, ui, page, decorations) {
 
   function dayOfWeek() {
     var day = new Date().getDay();
     return day === 0 ? 6 : day - 1;
-  }
-
-  function disableSendIfNoProjects() {
-    var props = _.range(0, 4)
-      .map(function(i) {
-        var project = page.$mainFrame("#addProj_ID" + i);
-        var task = page.$mainFrame("#addTask_ID" + i);
-        
-        return [project].map(function(el) {
-          var currentVal = el.val();
-          var currentValBool = !_.isNaN(Number(currentVal));
-          return el.asEventStream("change")
-            .map(function(event) {
-              return !_.isNaN(Number($(event.target).val()));
-            })
-            .toProperty(currentValBool);
-        });
-      })
-      .map(function(pair) {
-        return pair[0];
-      });
-
-    return props;
   }
 
   $(function() {
@@ -42,6 +20,8 @@ define([
 
     ui.loadCss();
     ui.loadHtml({endHours: defaultEndHours, endMinutes: defaultEndMinutes});
+
+    decorations.disableSendIfNoProjectSelected();
 
     function toNumStream(selector) {
       return page.$bottomFrame(selector)
@@ -139,12 +119,9 @@ define([
 
     var day = toNumProperty("#pickaday", defaultDay).map(lastValue);
 
-    var pairs = disableSendIfNoProjects();
-
-    Bacon.combineAsArray(roundedTotal, day, Bacon.combineAsArray(pairs)).onValue(pat()
-      .caseof(_.isArray, function(args, self) { debugger; self.apply(this, args) })
-      .otherwise(function(times, dayValue, pairsValues) {
-        debugger;
+    Bacon.combineAsArray(roundedTotal, day).onValue(pat()
+      .caseof(_.isArray, function(args, self) { self.apply(this, args); })
+      .otherwise(function(times, dayValue) {
         var restTime = times.reduce(function(a, b) {
           return a - b;
         });
@@ -184,25 +161,9 @@ define([
         } else {
           page.$mainFrame(createSelector(day, 2)).val("");
         }
-        
+
         page.$bottomFrame("#severa-time-unmarked").html(time.toSeveraTime(restTime));
         page.$mainFrame(createSelector(day, 3)).val(time.toSeveraTime(restTime));
-
-        var save = page.$mainFrame("input[class='button']");
-        save.removeAttr('disabled');
-
-        // UGLY, FIX, NOW!
-        severaTimes[4] = time.toSeveraTime(restTime);
-
-        _.range(0, 4).forEach(function(i) {
-          if(severaTimes[i + 1] !== "0,0") {
-            if(!pairsValues[i]) {
-              save.attr('disabled','disabled');
-            } else {
-              save.removeAttr('disabled');
-            }
-          }
-        });
       })
     );
   });
