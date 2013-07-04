@@ -17877,11 +17877,24 @@ define('main',[
         }
 
         page.$bottomFrame("#severa-time1").html(severaTimes[1]);
-        page.$mainFrame(createSelector(day, 0)).val(severaTimes[1]);
+        if(severaTimes[1] !== "0,0") {
+          page.$mainFrame(createSelector(day, 0)).val(severaTimes[1]);
+        } else {
+          page.$mainFrame(createSelector(day, 0)).val("");
+        }
         page.$bottomFrame("#severa-time2").html(severaTimes[2]);
-        page.$mainFrame(createSelector(day, 1)).val(severaTimes[2]);
+        if(severaTimes[2] !== "0,0") {
+          page.$mainFrame(createSelector(day, 1)).val(severaTimes[2]);
+        } else {
+          page.$mainFrame(createSelector(day, 1)).val("");
+        }
         page.$bottomFrame("#severa-time3").html(severaTimes[3]);
-        page.$mainFrame(createSelector(day, 2)).val(severaTimes[3]);
+        if(severaTimes[3] !== "0,0") {
+          page.$mainFrame(createSelector(day, 2)).val(severaTimes[3]);
+        } else {
+          page.$mainFrame(createSelector(day, 2)).val("");
+        }
+        
         page.$bottomFrame("#severa-time-unmarked").html(time.toSeveraTime(restTime));
         page.$mainFrame(createSelector(day, 3)).val(time.toSeveraTime(restTime));
 
