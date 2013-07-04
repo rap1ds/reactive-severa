@@ -2,39 +2,10 @@ define([
   "jquery", 
   "Bacon",
   "pat",
-  "timeutils", 
-  "text!html/index.html", 
-  "text!css/styles.css"], function($, Bacon, pat, time, tmpl, css) {
-  
-  var mainFrameContents = $(window.frames["main"].document).contents();
-  var bottomFrameContents = $(window.frames["lista"].document).contents();
-
-  function $mainFrame(selector) {
-    return $(selector, mainFrameContents)
-  }
-
-  function $bottomFrame(selector) {
-    return $(selector, bottomFrameContents);
-  }
-
-  // Load CSS (append style element to head)
-  function loadCss(css) {
-      var head = $bottomFrame('head'),
-          style = document.createElement('style');
-
-      style.type = 'text/css';
-      if (style.styleSheet){
-        style.styleSheet.cssText = css;
-      } else {
-        style.appendChild(document.createTextNode(css));
-      }
-      head.append(style);
-    }
-
-  function loadHtml(tmpl, data) {
-    var compiled = _.template(tmpl, data);
-    $("body", bottomFrameContents).append(compiled);
-  }
+  "timeutils",
+  "ui",
+  "page"
+  ], function($, Bacon, pat, time, ui, page) {
 
   function dayOfWeek() {
     var day = new Date().getDay();
@@ -44,8 +15,8 @@ define([
   function disableSendIfNoProjects() {
     var props = _.range(0, 4)
       .map(function(i) {
-        var project = $mainFrame("#addProj_ID" + i);
-        var task = $mainFrame("#addTask_ID" + i);
+        var project = page.$mainFrame("#addProj_ID" + i);
+        var task = page.$mainFrame("#addTask_ID" + i);
         
         return [project].map(function(el) {
           var currentVal = el.val();
@@ -69,11 +40,11 @@ define([
     var defaultEndHours = (new Date()).getHours();
     var defaultEndMinutes = (new Date()).getMinutes();
 
-    loadCss(css);
-    loadHtml(tmpl, {endHours: defaultEndHours, endMinutes: defaultEndMinutes});
+    ui.loadCss();
+    ui.loadHtml({endHours: defaultEndHours, endMinutes: defaultEndMinutes});
 
     function toNumStream(selector) {
-      return $(selector, bottomFrameContents)
+      return page.$bottomFrame(selector)
         .asEventStream("change")
         .map(function(event) { 
           return Number($(event.target).val());
@@ -104,8 +75,8 @@ define([
     _.range(1, 5)
       .forEach(function(i) {
         var selector = ["#txt", "Kuvaus", i - 1].join("_");
-        var el = $(selector, mainFrameContents);
-        $("#task" + i + "-desc", bottomFrameContents)
+        var el = page.$mainFrame(selector);
+        page.$bottomFrame("#task" + i + "-desc")
           .asEventStream("keyup")
           .map(function(event) {
             return $(event.target).val();
@@ -115,7 +86,7 @@ define([
           });
       })
 
-    var roundTo15 = $("#round", bottomFrameContents)
+    var roundTo15 = page.$bottomFrame("#round")
       .asEventStream("change")
       .map(function(event) {
         return $(event.target).is(':checked')
@@ -129,10 +100,10 @@ define([
     }, worktime, lunch, task1, task2, task3);
 
     rest.onValue(function(restTime) {
-      $("#unmarked", bottomFrameContents).html(time.formatMinutes(restTime));
+      page.$bottomFrame("#unmarked").html(time.formatMinutes(restTime));
     });
 
-    var round = $("#round", bottomFrameContents)
+    var round = page.$bottomFrame("#round")
       .asEventStream("change")
       .map(function(event) {
         return !!event.target.checked;
@@ -160,7 +131,7 @@ define([
     })();
 
     function setSelectDay(day) {
-      $("#pickaday", bottomFrameContents).val(day);
+      page.$bottomFrame("#pickaday").val(day);
     }
 
     var defaultDay = dayOfWeek();
@@ -189,22 +160,22 @@ define([
         var day = dayValue[1];
 
         if(lastDay !== undefined && lastDay !== day) {
-          $(createSelector(lastDay, 0), mainFrameContents).val("");
-          $(createSelector(lastDay, 1), mainFrameContents).val("");
-          $(createSelector(lastDay, 2), mainFrameContents).val("");
-          $(createSelector(lastDay, 3), mainFrameContents).val("");
+          page.$mainFrame(createSelector(lastDay, 0)).val("");
+          page.$mainFrame(createSelector(lastDay, 1)).val("");
+          page.$mainFrame(createSelector(lastDay, 2)).val("");
+          page.$mainFrame(createSelector(lastDay, 3)).val("");
         }
 
-        $("#severa-time1", bottomFrameContents).html(severaTimes[1]);
-        $(createSelector(day, 0), mainFrameContents).val(severaTimes[1]);
-        $("#severa-time2", bottomFrameContents).html(severaTimes[2]);
-        $(createSelector(day, 1), mainFrameContents).val(severaTimes[2]);
-        $("#severa-time3", bottomFrameContents).html(severaTimes[3]);
-        $(createSelector(day, 2), mainFrameContents).val(severaTimes[3]);
-        $("#severa-time-unmarked", bottomFrameContents).html(time.toSeveraTime(restTime));
-        $(createSelector(day, 3), mainFrameContents).val(time.toSeveraTime(restTime));
+        page.$bottomFrame("#severa-time1").html(severaTimes[1]);
+        page.$mainFrame(createSelector(day, 0)).val(severaTimes[1]);
+        page.$bottomFrame("#severa-time2").html(severaTimes[2]);
+        page.$mainFrame(createSelector(day, 1)).val(severaTimes[2]);
+        page.$bottomFrame("#severa-time3").html(severaTimes[3]);
+        page.$mainFrame(createSelector(day, 2)).val(severaTimes[3]);
+        page.$bottomFrame("#severa-time-unmarked").html(time.toSeveraTime(restTime));
+        page.$mainFrame(createSelector(day, 3)).val(time.toSeveraTime(restTime));
 
-        var save = $mainFrame("input[class='button']");
+        var save = page.$mainFrame("input[class='button']");
         save.removeAttr('disabled');
 
         // UGLY, FIX, NOW!

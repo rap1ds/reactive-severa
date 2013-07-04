@@ -1,0 +1,25 @@
+{
+  "name": "pat",
+  "version": "0.0.0",
+  "main": "lib/pat.js",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "components",
+    ".gitignore",
+    ".npmignore"
+  ],
+  "dependencies": {
+    "lodash": "1.1.x"
+  },
+  "gitHead": "34e98bd21308071f78079aec981adb0362549e1c",
+  "readme": "# Pattern matching in JavaScript\n\n## Getting Started\n\n```javascript\nvar pat = require('pat');\n\nvar pow = pat()\n  .caseof(Number, 0, function() { return 1; })\n  .caseof(Number, Number, function(x, y) { \n    return x * pow(x, y - 1 ); \n  });\n\n```\n\n## Why pattern matching?\n\nWhat is pattern matching? In short, it is a mechanism to choose which variant of a function is the correct one to call. \n\nThink about a `pow(base, exponent)` function. In fact, `pow` has three variants: \n\n* If the `exponent` is 0, return 1. \n* If the `exponent` is greater than zero, return the 'normal' `base` to the `exponent` power.\n* If the `exponent` is less than 0, return 1 divided by the `base` to the `exponent` power.\n\nWhen `pow` is called, the function has to choose which variant to use. Traditionally, this is done by if-else comparison. Here's an example of `pow` implementation:\n\n```javascript\nfunction pow1(x, y) {\n  if(y === 0) {\n    return 1;\n  } else if(y < 0) {\n    return 1 / x * pow1(x, ((y * -1) - 1));\n  } else {\n    return x * pow1(x, y - 1);\n  }\n}\n```\n\nHowever, pattern matching let's you get rid of the cubersome `if`s and replace those in more elegant `caseof` control structure.\n\n```javascript\nfunction lessThan(a) {\n  return function(b) {\n    return b < a;\n  }\n}\n\nvar pow2 = pat(function(x, y) {\n    return x * pow2(x, y - 1); \n  })\n  .caseof(Number, 0, function() {\n    return 1;\n  })\n  .caseof(Number, lessThan(0), function(x, y) {\n    return 1 / x * pow2(x, ((y * -1) - 1));\n  });\n```\n\n## Why pattern matching in JavaScript?\n\nJavaScript is dynamically typed language, which means (among other things) that functions can take any number of arguments of any type. The fact that any type is allowed, means that no one warns you if you pass in wrong type. For example, if you pass in `String` when `int` was expected, you might not notice an error if you don't look carefully. Take a `sum` function as an example:\n\n```javascript\nfunction sum(a, b) {\n  return a + b;\n}\n``` \n\nObviously, the `sum` is intended to be used with `int`s, but if you pass in `String`, you see no error but a weird result.\n\n```javascript\nsum(1, 2) === 3\nsum(\"1\", \"2\") === \"12\"\n```\n\nDynamic typing has both advantages and disadvantages. The above example, lack of compiler warnings demonstrates one of the disadvantages. However, the fact that any argument can be passed to function can be also convenient. We JavaScript devs have learned how to use this to write APIs that can take \"almost\" any argument, and work properly. For example, it's not too hard to implement the `sum` function so that it in fact could work properly with a `string` or an array of ints or maybe even array of strings.\n\nHowever, implementing the functions to work with multiple different types of arguments is not very interesting coding task. For example, in the `sum` function, the real beef of the functions is the `a + b`. However, if you'd implement sum to liberally take strings and arrays and whatnot, you'd end up writing 10 lines of if-elses to just get the arguments right.\n\n(To be continued...)\n\n## Examples\n\nSee [examples/](examples/)\n\n## Contributing\nIn lieu of a formal styleguide, take care to maintain the existing coding style. Add unit tests for any new or changed functionality. Lint and test your code using [grunt](https://github.com/cowboy/grunt).\n\n## Inspiration\n\n* [Coursera - Programming Languages by Dan Grossman](https://www.coursera.org/course/proglang)\n* [Standard ML](http://www.smlnj.org/)\n* [wu.js](http://fitzgen.github.com/wu.js/)\n* [match-js](https://github.com/jfd/match-js)\n\n## License\nCopyright (c) 2013 Mikko Koski  \nLicensed under the MIT license.\n",
+  "readmeFilename": "README.md",
+  "_id": "pat@0.1.0",
+  "description": "## Getting Started",
+  "commit": "34e98bd21308071f78079aec981adb0362549e1c",
+  "repository": {
+    "type": "local-repo",
+    "path": "../pat"
+  }
+}
