@@ -1,4 +1,10 @@
-define(["jquery", "Bacon", "timeutils", "text!html/index.html", "text!css/styles.css"], function($, Bacon, time, tmpl, css) {
+define([
+  "jquery", 
+  "Bacon",
+  "pat",
+  "timeutils", 
+  "text!html/index.html", 
+  "text!css/styles.css"], function($, Bacon, pat, time, tmpl, css) {
   
   var mainFrameContents = $(window.frames["main"].document).contents();
   var bottomFrameContents = $(window.frames["lista"].document).contents();
@@ -36,7 +42,7 @@ define(["jquery", "Bacon", "timeutils", "text!html/index.html", "text!css/styles
   }
 
   function disableSendIfNoProjects() {
-    var props = _.chain(_.range(0, 4))
+    var props = _.range(0, 4)
       .map(function(i) {
         var project = $mainFrame("#addProj_ID" + i);
         var task = $mainFrame("#addTask_ID" + i);
@@ -53,8 +59,7 @@ define(["jquery", "Bacon", "timeutils", "text!html/index.html", "text!css/styles
       })
       .map(function(pair) {
         return pair[0];
-      })
-      .value();
+      });
 
     return props;
   }
@@ -165,55 +170,56 @@ define(["jquery", "Bacon", "timeutils", "text!html/index.html", "text!css/styles
 
     var pairs = disableSendIfNoProjects();
 
-    Bacon.combineAsArray(roundedTotal, day, Bacon.combineAsArray(pairs)).onValue(function(args) {
-      var times = args[0];
-      var dayValue = args[1];
-      var pairsValues = args[2];
-      var restTime = times.reduce(function(a, b) {
-        return a - b;
-      });
+    Bacon.combineAsArray(roundedTotal, day, Bacon.combineAsArray(pairs)).onValue(pat()
+      .caseof(_.isArray, function(args, self) { debugger; self.apply(this, args) })
+      .otherwise(function(times, dayValue, pairsValues) {
+        debugger;
+        var restTime = times.reduce(function(a, b) {
+          return a - b;
+        });
 
-      var severaTimes = times.map(time.toSeveraTime);
+        var severaTimes = times.map(time.toSeveraTime);
 
-      function createSelector(day, col) {
-        var selector = ["txt", "Paiva", col, day].join("_");
-        return "#" + selector;
-      }
-
-      var lastDay = dayValue[0];
-      var day = dayValue[1];
-
-      if(lastDay !== undefined && lastDay !== day) {
-        $(createSelector(lastDay, 0), mainFrameContents).val("");
-        $(createSelector(lastDay, 1), mainFrameContents).val("");
-        $(createSelector(lastDay, 2), mainFrameContents).val("");
-        $(createSelector(lastDay, 3), mainFrameContents).val("");
-      }
-
-      $("#severa-time1", bottomFrameContents).html(severaTimes[1]);
-      $(createSelector(day, 0), mainFrameContents).val(severaTimes[1]);
-      $("#severa-time2", bottomFrameContents).html(severaTimes[2]);
-      $(createSelector(day, 1), mainFrameContents).val(severaTimes[2]);
-      $("#severa-time3", bottomFrameContents).html(severaTimes[3]);
-      $(createSelector(day, 2), mainFrameContents).val(severaTimes[3]);
-      $("#severa-time-unmarked", bottomFrameContents).html(time.toSeveraTime(restTime));
-      $(createSelector(day, 3), mainFrameContents).val(time.toSeveraTime(restTime));
-
-      var save = $mainFrame("input[class='button']");
-      save.removeAttr('disabled');
-
-      // UGLY, FIX, NOW!
-      severaTimes[4] = time.toSeveraTime(restTime);
-
-      _.range(0, 4).forEach(function(i) {
-        if(severaTimes[i + 1] !== "0,0") {
-          if(!pairsValues[i]) {
-            save.attr('disabled','disabled');
-          } else {
-            save.removeAttr('disabled');
-          }
+        function createSelector(day, col) {
+          var selector = ["txt", "Paiva", col, day].join("_");
+          return "#" + selector;
         }
-      });
-    });
+
+        var lastDay = dayValue[0];
+        var day = dayValue[1];
+
+        if(lastDay !== undefined && lastDay !== day) {
+          $(createSelector(lastDay, 0), mainFrameContents).val("");
+          $(createSelector(lastDay, 1), mainFrameContents).val("");
+          $(createSelector(lastDay, 2), mainFrameContents).val("");
+          $(createSelector(lastDay, 3), mainFrameContents).val("");
+        }
+
+        $("#severa-time1", bottomFrameContents).html(severaTimes[1]);
+        $(createSelector(day, 0), mainFrameContents).val(severaTimes[1]);
+        $("#severa-time2", bottomFrameContents).html(severaTimes[2]);
+        $(createSelector(day, 1), mainFrameContents).val(severaTimes[2]);
+        $("#severa-time3", bottomFrameContents).html(severaTimes[3]);
+        $(createSelector(day, 2), mainFrameContents).val(severaTimes[3]);
+        $("#severa-time-unmarked", bottomFrameContents).html(time.toSeveraTime(restTime));
+        $(createSelector(day, 3), mainFrameContents).val(time.toSeveraTime(restTime));
+
+        var save = $mainFrame("input[class='button']");
+        save.removeAttr('disabled');
+
+        // UGLY, FIX, NOW!
+        severaTimes[4] = time.toSeveraTime(restTime);
+
+        _.range(0, 4).forEach(function(i) {
+          if(severaTimes[i + 1] !== "0,0") {
+            if(!pairsValues[i]) {
+              save.attr('disabled','disabled');
+            } else {
+              save.removeAttr('disabled');
+            }
+          }
+        });
+      })
+    );
   });
 });

@@ -4,6 +4,7 @@ requirejs.config({
       "jquery": "../components/jquery/jquery",
       "Bacon": "../components/baconjs/dist/Bacon",
       "lodash": "../components/lodash/lodash",
+      "pat": "../components/pat/lib/pat",
       "html": "../html"
     }
 });
