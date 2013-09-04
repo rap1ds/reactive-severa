@@ -17683,7 +17683,7 @@ define('text',['module'], function (module) {
     }
     return text;
 });
-define('text!html/index.html',[],function () { return '<div id="calculator-container">\n  <form class="form-signin">\n    <h2 class="form-signin-heading">Severa calculator</h2>\n    \n    <label>Pick a day <strong>day</strong></label>\n\n    <div class="controls">\n      <select id="pickaday">\n  \t\t<option value="0">Monday</option> \n  \t\t<option value="1">Tuesday</option>\n  \t\t<option value="2">Wednesday</option>\n  \t\t<option value="3">Thuesday</option>\n  \t\t<option value="4">Friday</option>\n  \t\t<option value="5">Saturday</option>\n  \t\t<option value="6">Sunday</option>\n\t  </select>\n    </div>\n\n    <label>When did you <strong>come?</strong></label>\n    \n    <div class="controls">\n      <input id="start-hours" type="text" class="small-input" placeholder="hh">\n      <input id="start-minutes" type="text" class="small-input" placeholder="mm">\n    </div>\n\n    <label>When did you <strong>leave?</strong></label>\n    \n    <div class="controls">\n      <input id="end-hours" type="text" class="small-input" placeholder="hh" value="<%= endHours %>">\n      <input id="end-minutes" type="text" class="small-input" placeholder="mm" value="<%= endMinutes %>">\n    </div>\n\n    <hr />\n\n    <label>How long was your <strong>lunch?</strong></label>\n    \n    <div class="controls">\n      <input id="lunch-hours" type="text" class="small-input" placeholder="hh">\n      <input id="lunch-minutes" type="text" class="small-input" placeholder="mm">\n    </div>\n\n    <label>Other tasks</label>\n\n    <div class="controls">\n      <input id="task1-desc" type="text" class="medium-input" placeholder="Description">\n      <input id="task1-hours" type="text" class="small-input" placeholder="hh">\n      <input id="task1-minutes" type="text" class="small-input" placeholder="mm">\n      <span id="severa-time1" class="severa-time"></span>\n    </div>\n\n    <div class="controls">\n      <input id="task2-desc" type="text" class="medium-input" placeholder="Description">\n      <input id="task2-hours" type="text" class="small-input" placeholder="hh">\n      <input id="task2-minutes" type="text" class="small-input" placeholder="mm">\n      <span id="severa-time2" class="severa-time"></span>\n    </div>\n\n    <div class="controls">\n      <input id="task3-desc" type="text" class="medium-input" placeholder="Description">\n      <input id="task3-hours" type="text" class="small-input" placeholder="hh">\n      <input id="task3-minutes" type="text" class="small-input" placeholder="mm">\n      <span id="severa-time3" class="severa-time"></span>\n    </div>\n\n    <div class="controls">\n      <input id="task4-desc" type="text" class="medium-input" placeholder="Description">\n      <span id="unmarked-span"><strong id="unmarked">0:00</strong></span>\n      <span id="severa-time-unmarked" class="severa-time"></span>\n    </div>\n\n    <div class="controls">\n      <label class="checkbox">\n        <input id="round" type="checkbox" checked="checked"> Round to nearest 15 mins\n      </label>\n    </div>\n\n  </form>\n</div>';});
+define('text!html/index.html',[],function () { return '<div id="calculator-container">\n  <form class="form-signin">\n    <h2 class="form-signin-heading">Severa calculator</h2>\n    \n    <label>Pick a day <strong>day</strong></label>\n\n    <div class="controls">\n      <select id="pickaday">\n  \t\t<option value="0">Monday</option> \n  \t\t<option value="1">Tuesday</option>\n  \t\t<option value="2">Wednesday</option>\n  \t\t<option value="3">Thuesday</option>\n  \t\t<option value="4">Friday</option>\n  \t\t<option value="5">Saturday</option>\n  \t\t<option value="6">Sunday</option>\n\t  </select>\n    </div>\n\n    <label>When did you <strong>arrive?</strong></label>\n    \n    <div class="controls">\n      <input id="start-hours" type="text" class="small-input" placeholder="hh">\n      <input id="start-minutes" type="text" class="small-input" placeholder="mm">\n    </div>\n\n    <label>When did you <strong>leave?</strong></label>\n    \n    <div class="controls">\n      <input id="end-hours" type="text" class="small-input" placeholder="hh" value="<%= endHours %>">\n      <input id="end-minutes" type="text" class="small-input" placeholder="mm" value="<%= endMinutes %>">\n    </div>\n\n    <hr />\n\n    <label>How long was your <strong>lunch?</strong></label>\n    \n    <div class="controls">\n      <input id="lunch-hours" type="text" class="small-input" placeholder="hh">\n      <input id="lunch-minutes" type="text" class="small-input" placeholder="mm">\n    </div>\n\n    <label>Other tasks</label>\n\n    <div class="controls">\n      <input id="task1-desc" type="text" class="medium-input" placeholder="Description">\n      <input id="task1-hours" type="text" class="small-input" placeholder="hh">\n      <input id="task1-minutes" type="text" class="small-input" placeholder="mm">\n      <span id="severa-time1" class="severa-time"></span>\n    </div>\n\n    <div class="controls">\n      <input id="task2-desc" type="text" class="medium-input" placeholder="Description">\n      <input id="task2-hours" type="text" class="small-input" placeholder="hh">\n      <input id="task2-minutes" type="text" class="small-input" placeholder="mm">\n      <span id="severa-time2" class="severa-time"></span>\n    </div>\n\n    <div class="controls">\n      <input id="task3-desc" type="text" class="medium-input" placeholder="Description">\n      <input id="task3-hours" type="text" class="small-input" placeholder="hh">\n      <input id="task3-minutes" type="text" class="small-input" placeholder="mm">\n      <span id="severa-time3" class="severa-time"></span>\n    </div>\n\n    <div class="controls">\n      <input id="task4-desc" type="text" class="medium-input" placeholder="Description">\n      <span id="unmarked-span"><strong id="unmarked">0:00</strong></span>\n      <span id="severa-time-unmarked" class="severa-time"></span>\n    </div>\n\n    <div class="controls">\n      <label class="checkbox">\n        <input id="round" type="checkbox" checked="checked"> Round to nearest 15 mins\n      </label>\n    </div>\n\n  </form>\n</div>';});
 
 define('text!css/styles.css',[],function () { return '#calculator-container {\n\tposition: absolute;\n\ttop: 10px;\n\tbottom: 10px;\n\tright: 10px;\n\tleft: 10px;\n\tpadding: 10px;\n\tbackground-color: white;\n\tborder: 2px solid #CCC;\n\tmax-width: 900px;\n}';});
 
@@ -17718,20 +17718,31 @@ define('ui',[
   }
 });
 define('decorations',[
-  "jquery", 
-  "Bacon", 
-  "page"], 
+  "jquery",
+  "Bacon",
+  "page"],
   function($, Bacon, page) {
   
   function toNumStream(el) {
     var initialVal = Number(el.val());
     var prop = el.asEventStream("change")
       .map(function(event) {
-        return Number($(event.target).val());
+        var strVal = $(event.target).val().replace(',', '.');
+        return Number(strVal);
       })
       .toProperty(initialVal);
 
     return prop;
+  }
+
+  function log(msg) {
+    return function(stream) {
+      stream.log(msg);
+    };
+  }
+
+  function logEach(streams, msg) {
+    streams.forEach(log(msg));
   }
 
   function nonZeroPositiveNumber(num) {
@@ -17739,50 +17750,58 @@ define('decorations',[
   }
 
   function disableSendIfNoProjectSelected() {
-    
+
+    // Elements
     var projectDropdowns = _.range(0, 4).map(function(i) { 
       return page.$project(i);
     });
 
-    var projectProperties = projectDropdowns.map(function(el) {
-      debugger;
-      var numStreams = toNumStream(el).map(function(num) {
-        debugger;
-        return !_.isNaN(num);
-      });
-
-      numStreams.log("project prop");
-
-      return numStreams;
-    });
-
-    var inputRows = _.range(0, 4).map(function(row) {
+    var hourRows = _.range(0, 4).map(function(row) {
       return _.range(0, 7).map(function(column) {
         return page.$grid(row, column);
       });
     });
 
-    var inputRowStreams = inputRows.map(function(inputColumns) {
+    // Streams
+
+    // projectSelected: 
+    // Array of four streams. Each stream return true if project is selected
+    var projectSelected = projectDropdowns.map(function(el) {
+      var numStreams = toNumStream(el).map(function(num) {
+        return !_.isNaN(num);
+      });
+
+      return numStreams;
+    });
+
+    // hourRowFilled:
+    // Array of four streams. Each stream returns true, if hours are filled for the particular row
+    var hourRowFilled = hourRows.map(function(inputColumns) {
       return inputColumns.map(function(el) {
-        return toNumStream(el).map(nonZeroPositiveNumber);
+        var hourInputChanged = toNumStream(el).map(nonZeroPositiveNumber);
+        hourInputChanged.log("hour input changed");
+        return hourInputChanged;
       }).reduce(function(a, b) {
         return a.or(b);
       });
     });
 
-    var rows = _.range(0, 4).map(function(i) {
-      return Bacon.combineWith(function(project, columns) {
-        if(columns) {
-          return project;
-        } else {
-          return true;
-        }
-      }, projectProperties[i], inputRowStreams[i]).log("rows " + i);
-    }).reduce(function(a, b) {
+    function isValidRow(isProjectSelected, isHoursFilled) {
+      return isHoursFilled ? isProjectSelected : true;
+    }
+
+    // rowOk:
+    // Array of four streams. Stream returns true, if row is ok, that is hours are 
+    // filled and project selected, or hours not filled
+    var rowOk = _.range(0, 4).map(function(i) {
+      return Bacon.combineWith(isValidRow, projectSelected[i], hourRowFilled[i]);
+    });
+
+    var allRowsOk = rowOk.reduce(function(a, b) {
       return a.and(b);
     });
 
-    rows.onValue(function(isAllSelected) {
+    allRowsOk.onValue(function(isAllSelected) {
       if(isAllSelected) {
         page.$saveButton.removeAttr('disabled');
       } else {
@@ -17942,21 +17961,21 @@ define('main',[
 
         page.$bottomFrame("#severa-time1").html(severaTimes[1]);
         if(severaTimes[1] !== "0,0") {
-          page.$mainFrame(createSelector(day, 0)).val(severaTimes[1]);
+          page.$mainFrame(createSelector(day, 0)).val(severaTimes[1]).change();
         } else {
-          page.$mainFrame(createSelector(day, 0)).val("");
+          page.$mainFrame(createSelector(day, 0)).val("").change();
         }
         page.$bottomFrame("#severa-time2").html(severaTimes[2]);
         if(severaTimes[2] !== "0,0") {
-          page.$mainFrame(createSelector(day, 1)).val(severaTimes[2]);
+          page.$mainFrame(createSelector(day, 1)).val(severaTimes[2]).change();
         } else {
-          page.$mainFrame(createSelector(day, 1)).val("");
+          page.$mainFrame(createSelector(day, 1)).val("").change();
         }
         page.$bottomFrame("#severa-time3").html(severaTimes[3]);
         if(severaTimes[3] !== "0,0") {
-          page.$mainFrame(createSelector(day, 2)).val(severaTimes[3]);
+          page.$mainFrame(createSelector(day, 2)).val(severaTimes[3]).change();
         } else {
-          page.$mainFrame(createSelector(day, 2)).val("");
+          page.$mainFrame(createSelector(day, 2)).val("").change();
         }
 
         page.$bottomFrame("#severa-time-unmarked").html(time.toSeveraTime(restTime));

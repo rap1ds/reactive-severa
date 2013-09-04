@@ -1,18 +1,29 @@
 define([
-  "jquery", 
-  "Bacon", 
-  "page"], 
+  "jquery",
+  "Bacon",
+  "page"],
   function($, Bacon, page) {
   
   function toNumStream(el) {
     var initialVal = Number(el.val());
     var prop = el.asEventStream("change")
       .map(function(event) {
-        return Number($(event.target).val());
+        var strVal = $(event.target).val().replace(',', '.');
+        return Number(strVal);
       })
       .toProperty(initialVal);
 
     return prop;
+  }
+
+  function log(msg) {
+    return function(stream) {
+      stream.log(msg);
+    };
+  }
+
+  function logEach(streams, msg) {
+    streams.forEach(log(msg));
   }
 
   function nonZeroPositiveNumber(num) {
@@ -20,50 +31,58 @@ define([
   }
 
   function disableSendIfNoProjectSelected() {
-    
+
+    // Elements
     var projectDropdowns = _.range(0, 4).map(function(i) { 
       return page.$project(i);
     });
 
-    var projectProperties = projectDropdowns.map(function(el) {
-      debugger;
-      var numStreams = toNumStream(el).map(function(num) {
-        debugger;
-        return !_.isNaN(num);
-      });
-
-      numStreams.log("project prop");
-
-      return numStreams;
-    });
-
-    var inputRows = _.range(0, 4).map(function(row) {
+    var hourRows = _.range(0, 4).map(function(row) {
       return _.range(0, 7).map(function(column) {
         return page.$grid(row, column);
       });
     });
 
-    var inputRowStreams = inputRows.map(function(inputColumns) {
+    // Streams
+
+    // projectSelected: 
+    // Array of four streams. Each stream return true if project is selected
+    var projectSelected = projectDropdowns.map(function(el) {
+      var numStreams = toNumStream(el).map(function(num) {
+        return !_.isNaN(num);
+      });
+
+      return numStreams;
+    });
+
+    // hourRowFilled:
+    // Array of four streams. Each stream returns true, if hours are filled for the particular row
+    var hourRowFilled = hourRows.map(function(inputColumns) {
       return inputColumns.map(function(el) {
-        return toNumStream(el).map(nonZeroPositiveNumber);
+        var hourInputChanged = toNumStream(el).map(nonZeroPositiveNumber);
+        hourInputChanged.log("hour input changed");
+        return hourInputChanged;
       }).reduce(function(a, b) {
         return a.or(b);
       });
     });
 
-    var rows = _.range(0, 4).map(function(i) {
-      return Bacon.combineWith(function(project, columns) {
-        if(columns) {
-          return project;
-        } else {
-          return true;
-        }
-      }, projectProperties[i], inputRowStreams[i]).log("rows " + i);
-    }).reduce(function(a, b) {
+    function isValidRow(isProjectSelected, isHoursFilled) {
+      return isHoursFilled ? isProjectSelected : true;
+    }
+
+    // rowOk:
+    // Array of four streams. Stream returns true, if row is ok, that is hours are 
+    // filled and project selected, or hours not filled
+    var rowOk = _.range(0, 4).map(function(i) {
+      return Bacon.combineWith(isValidRow, projectSelected[i], hourRowFilled[i]);
+    });
+
+    var allRowsOk = rowOk.reduce(function(a, b) {
       return a.and(b);
     });
 
-    rows.onValue(function(isAllSelected) {
+    allRowsOk.onValue(function(isAllSelected) {
       if(isAllSelected) {
         page.$saveButton.removeAttr('disabled');
       } else {
